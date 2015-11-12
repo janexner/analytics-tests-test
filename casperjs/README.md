@@ -1,0 +1,2 @@
+Tests based on CasperJS
+
