@@ -8,7 +8,7 @@ casper.on("resource.error", function(resourceError) {
     console.log('Error code: ' + resourceError.errorCode + '. Description: ' + resourceError.errorString);
 });
 
-casper.test.begin("Home page Data Elements have the correct values", 8, function suite(test) {
+casper.test.begin("Home page PLRs fire as planned", 8, function suite(test) {
     casper.start(pageToTest, function() {
         this.echo("Page Title: " + this.getTitle());
         test.assertTitle("jan-exner.de | Home", "Page title is correct");
@@ -17,7 +17,7 @@ casper.test.begin("Home page Data Elements have the correct values", 8, function
     casper.then(function() {
         test.assertEval(function() {
             return typeof _satellite !== "undefined";
-        });
+        }, "DTM is present on page");
 
         var pagename = this.evaluate(function() {
             return _satellite.getVar("Page Name");
