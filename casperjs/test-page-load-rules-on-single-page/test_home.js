@@ -23,27 +23,36 @@ casper.test.begin("Home page Data Elements have the correct values", 8, function
             return _satellite.getVar("Page Name");
         });
         test.assertEquals(pagename, "Home", "%Page Name% Data Element test");
+    });
 
-        var aaa = this.evaluate(function() {
-            return _satellite.getVar("Page Author");
+    casper.then(function() {
+        var ruleNames = ["Normal Page Load", "Top of Page Stuff", "Session based rule for getVisitnum replacement"];
+        var numFired = this.evaluate(function() {
+            var numFired = 0;
+            _satellite.each(_satellite.Logger.getHistory(), function(msg) {
+                if (msg[1].indexOf("fired") >= 0) {
+                    numFired++;
+                }
+            });
+            return numFired;
         });
-        test.assertEquals(aaa, "Jan Exner", "%Page Author% Data Element test");
+        test.assertEquals(numFired, ruleNames.length, "Page should fire " + ruleNames.length + " rules");
 
-        var aaa = this.evaluate(function() {
-            return _satellite.getVar("Page Category");
-        });
-        test.assertEquals(aaa, "default", "%Page Category% Data Element test");
+        for (var i = ruleNames.length - 1; i >= 0; i--) {
+            var plrres = this.evaluate(function(rn) {
+                var fired = "no";
+                _satellite.each(_satellite.Logger.getHistory(), function(msg) {
+                    if (msg[1].indexOf("fired") >= 0 && msg[1].indexOf(rn) >= 0) {
+                        fired = "yes";
+                    }
+                });
+                return fired;
+            }, ruleNames[i]);
+            test.assertEquals(plrres, "yes", "PLR '" + ruleNames[i] + "' fired test");
+        };
+    });
 
-        var aaa = this.evaluate(function() {
-            return _satellite.getVar("Page Language");
-        });
-        test.assertEquals(aaa, "mixed", "%Page Language% Data Element test");
-
-        var aaa = this.evaluate(function() {
-            return _satellite.getVar("Page Type");
-        });
-        test.assertEquals(aaa, "generic", "%Page Type% Data Element test");
-
+    casper.then(function() {
         var loadtime = this.evaluate(function() {
             var t = performance.timing;
             return t.loadEventEnd - t.responseEnd;
