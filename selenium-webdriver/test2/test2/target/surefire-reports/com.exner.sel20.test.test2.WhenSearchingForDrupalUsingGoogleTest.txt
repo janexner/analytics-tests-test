@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.exner.sel20.test.test2.WhenSearchingForDrupalUsingGoogleTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.355 sec
