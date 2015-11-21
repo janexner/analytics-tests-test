@@ -1,0 +1,24 @@
+# test file for feeding data element value test
+# Data Element Name,Expected Value
+Blog Reader Type,
+Breadcrumb Level 1,
+Breadcrumb Level 1 korrekt,home
+Campaign Tracking Code,
+#Content Age in Days,unknown
+#Content Age in Minutes,5472.533333
+Data Layer Name,dataLayer
+Geolocation from Browser,location not available
+Geolocation from Cookie,no location data available
+Internal Search Number of Results,
+Internal Search Term,
+isDebuggingEnabled,n
+#JS Build / Publish Date,2015-11-19 07:03:16 UTC|2015-11-19 07:03:15 UTC
+Page Author,Jan Exner
+Page Category,default
+Page Language,mixed
+Page Name,Home
+Page Type,generic
+Staging or Production,Production
+#Time on Tab in Seconds,-1
+Visit Number,1
+VisitorAPI present flag,VisitorAPI Present
