@@ -38,6 +38,7 @@
 var colourHead = ["#F0F0F0", "#F9F9F9"];
 var colourBody = [["#FFF6F6", "#FFFAFA"], ["#F9FFF9", "#FEFFFE"]];
 var pagesData;
+var plrNameIDMap = {};
 function loadFile() {
     var input, file, fr;
 
@@ -112,12 +113,16 @@ function loadFile() {
 		plrHeader.innerHTML = "Page Load Rules";
 		dataTableHeaderTopRow.appendChild(plrHeader);
 		for (var i = 0, max = plrList.length; i < max; i++) {
+			var plrName = plrList[i];
+			plrNameIDMap[plrName] = i;
 			var plrplrh = document.createElement("th");
-			plrplrh.innerHTML = plrList[i];
+			plrplrh.innerHTML = plrName;
 			plrplrh.bgColor = colourHead[(i + offset) % 2];
 			dataTableHeaderMiddleRow.appendChild(plrplrh);
 			var plrplrf = document.createElement("th");
-			plrplrf.innerHTML = "fired";
+			plrplrf.innerHTML = "<input type='button' value='All on' id='plr_" + i + "_all_on'> | <input type='button' value='All off' id='plr_" + i + "_all_off'>";
+			plrplrf.dataset.itemclass = "plr-" + i;
+			plrplrf.title = "Test PLR on all pages or not?";
 			plrplrf.bgColor = colourHead[(i + offset) % 2];
 			dataTableHeaderBottomRow.appendChild(plrplrf);
 		};
@@ -159,6 +164,22 @@ function loadFile() {
 				cellVal.innerHTML = de.value;
 				tableRow.appendChild(cellVal);
 			}
+			for(var j = 0, max2 = plrList.length; j < max2; j++) {
+				var plr = plrList[j];
+				var cellX = document.createElement("td");
+				cellX.id = "plr-active-" + plr;
+				cellX.bgColor = colourBody[i %2][(j + offset) % 2];
+				cellX.innerHTML = "<input type='checkbox' checked id='plr-active-" + i + "-" + j + "' class='plr-active-box plr-" + j + "'>";
+				tableRow.appendChild(cellX);
+			}
+			// switch off those that are not active
+			for(var j = 0, max2 = thisPageInfo.pageLoadRules.length; j < max2; j++) {
+				var plr = thisPageInfo.pageLoadRules[j];
+				if (typeof plr.active !== 'undefined' && plr.active === false) {
+					var plrid = plrNameIDMap[plr.name];
+					$("#plr-active-" + i + "-" + plrid).click();
+				}
+			}
 		};
 
 		// attach fancy scripts
@@ -183,29 +204,62 @@ function loadFile() {
 					}
 				});
 			});
-			$(".de-active-box").on("change", function() {
-				var id = $(this).attr("id");
-				var state = $("#" + id).prop("checked");
-				var pid = id.replace(/de-active-/,"").replace(/-.*$/,"");
-				var did = id.replace(/de-active-[^-]+-/,"");
-				console.log(id + " > " + state);
-				pagesData.pages[pid].dataElements[did].active = state;				
-			});
-			$("#showJSON").on("click", function() {
-				$("#dataDisplay").hide();
-				$("#jsonDisplay").show();
-				var pre = document.getElementById("preJSON");
-				pre.innerHTML = JSON.stringify(pagesData, undefined, 2);
-				$("#copyJSON").val(JSON.stringify(pagesData));
-				$("#copyJSON").on("click", function() {
-					$(this).select();
+		}
+		$(".de-active-box").on("change", function() {
+			var id = $(this).attr("id");
+			var state = $("#" + id).prop("checked");
+			var pid = id.replace(/de-active-/,"").replace(/-.*$/,"");
+			var did = id.replace(/de-active-[^-]+-/,"");
+			console.log(id + " > " + state);
+			pagesData.pages[pid].dataElements[did].active = state;				
+		});
+		// scripts for PLRs
+		for(var i = 0, max = plrList.length; i < max; i++) {
+			var id = "plr_" + i + "_all_on";
+			$("#" + id).on("click", function() {
+				var cl = "." + $(this).parent().data("itemclass");
+				$(cl).each(function() {
+					var box = $(this)[0];
+					if (false === box.checked) {
+						box.click();
+					}
 				});
 			});
-			$("#showData").on("click", function() {
-				$("#jsonDisplay").hide();
-				$("#dataDisplay").show();
+			var id = "plr_" + i + "_all_off";
+			$("#" + id).on("click", function() {
+				var cl = "." + $(this).parent().data("itemclass");
+				$(cl).each(function() {
+					var box = $(this)[0];
+					if (true === box.checked) {
+						box.click();
+					}
+				});
 			});
 		}
+		$(".plr-active-box").on("change", function() {
+			var id = $(this).attr("id");
+			var state = $("#" + id).prop("checked");
+			var pid = id.replace(/plr-active-/,"").replace(/-.*$/,"");
+			var did = id.replace(/plr-active-[^-]+-/,"");
+			console.log(id + " > " + state);
+			var plrid = plrIDNameMap[did];
+			pagesData.pages[pid].pageLoadRules[plrid].active = state;				
+		});
+		// scripts for management
+		$("#showJSON").on("click", function() {
+			$("#dataDisplay").hide();
+			$("#jsonDisplay").show();
+			var pre = document.getElementById("preJSON");
+			pre.innerHTML = JSON.stringify(pagesData, undefined, 2);
+			$("#copyJSON").val(JSON.stringify(pagesData));
+			$("#copyJSON").on("click", function() {
+				$(this).select();
+			});
+		});
+		$("#showData").on("click", function() {
+			$("#jsonDisplay").hide();
+			$("#dataDisplay").show();
+		});
     }
 }
 	</script>
