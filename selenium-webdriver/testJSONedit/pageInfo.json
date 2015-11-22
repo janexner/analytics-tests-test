@@ -1,0 +1,81 @@
+{
+	"pages":[
+		{
+			"name":"jan-exner.de | Home",
+			"pageLoadRules":[
+				{
+					"name":"Top of Page Stuff",
+					"active":true
+				},
+				{
+					"name":"Session based rule for getVisitnum replacement",
+					"active":true
+				},
+				{
+					"name":"Normal Page Load",
+					"active":true
+				},
+				{
+					"name":"Tab Blur Test",
+					"active":false
+				}
+			],
+			"dataElements":[{"name":"Content Age in Days","value":"unknown","active":false},{"name":"Geolocation from Browser","value":"location not available","active":false},{"name":"Page Category","value":"default"},{"name":"Breadcrumb Level 1","value":""},{"name":"JS Build \/ Publish Date","value":"2015-11-21 17:28:03 UTC|2015-11-21 17:28:02 UTC","active":false},{"name":"Staging or Production","value":"Production"},{"name":"Visit Number","value":"1"},{"name":"Page Name","value":"Home"},{"name":"Breadcrumb Level 1 korrekt","value":"home"},{"name":"Time on Tab in Seconds","value":"-1","active":false},{"name":"Page Type","value":"generic"},{"name":"Internal Search Number of Results","value":""},{"name":"Blog Reader Type","value":""},{"name":"Page Language","value":"mixed"},{"name":"Geolocation from Cookie","value":"no location data available","active":false},{"name":"Data Layer Name","value":"dataLayer"},{"name":"Content Age in Minutes","value":"6253.9166666667","active":false},{"name":"Page Author","value":"Jan Exner"},{"name":"Internal Search Term","value":""},{"name":"Campaign Tracking Code","value":""},{"name":"VisitorAPI present flag","value":"VisitorAPI Present"},{"name":"isDebuggingEnabled","value":"n"}],
+			"url":"http:\/\/www.jan-exner.de"
+		},
+		{
+			"name":"jan-exner.de | About me",
+			"pageLoadRules":[
+				{
+					"name":"Top of Page Stuff",
+					"active":true
+				},
+				{
+					"name":"Session based rule for getVisitnum replacement",
+					"active":true
+				},
+				{
+					"name":"Normal Page Load",
+					"active":true
+				},
+				{
+					"name":"Tab Blur Test",
+					"active":false
+				}
+			],
+			"dataElements":[{"name":"Content Age in Days","value":"unknown","active":false},{"name":"Geolocation from Browser","value":"location not available","active":false},{"name":"Page Category","value":"default"},{"name":"Breadcrumb Level 1","value":""},{"name":"JS Build \/ Publish Date","value":"2015-11-21 17:28:03 UTC|2015-11-21 17:28:02 UTC","active":false},{"name":"Staging or Production","value":"Production"},{"name":"Visit Number","value":"1"},{"name":"Page Name","value":"About me"},{"name":"Breadcrumb Level 1 korrekt","value":"home"},{"name":"Time on Tab in Seconds","value":"-1","active":false},{"name":"Page Type","value":"generic"},{"name":"Internal Search Number of Results","value":""},{"name":"Blog Reader Type","value":""},{"name":"Page Language","value":"en-GB"},{"name":"Geolocation from Cookie","value":"no location data available","active":false},{"name":"Data Layer Name","value":"dataLayer"},{"name":"Content Age in Minutes","value":"","active":false},{"name":"Page Author","value":"Jan Exner"},{"name":"Internal Search Term","value":""},{"name":"Campaign Tracking Code","value":""},{"name":"VisitorAPI present flag","value":"VisitorAPI Present"},{"name":"isDebuggingEnabled","value":"n"}],
+			"url":"http:\/\/www.jan-exner.de\/about"
+		}
+	],
+	"pageLoadRules":[
+		"Search Results Page",
+		"Session based rule for getVisitnum replacement",
+		"Top of Page Stuff",
+		"Tab Blur Test",
+		"Normal Page Load",
+		"Blog Article Extras"
+	],
+	"dataElements":[
+		"Content Age in Days",
+		"Geolocation from Browser",
+		"Page Category",
+		"Breadcrumb Level 1",
+		"JS Build \/ Publish Date",
+		"Staging or Production",
+		"Visit Number","Page Name",
+		"Breadcrumb Level 1 korrekt",
+		"Time on Tab in Seconds",
+		"Page Type",
+		"Internal Search Number of Results",
+		"Blog Reader Type",
+		"Page Language",
+		"Geolocation from Cookie",
+		"Data Layer Name",
+		"Content Age in Minutes",
+		"Page Author",
+		"Internal Search Term",
+		"Campaign Tracking Code",
+		"VisitorAPI present flag",
+		"isDebuggingEnabled"
+	]
+}

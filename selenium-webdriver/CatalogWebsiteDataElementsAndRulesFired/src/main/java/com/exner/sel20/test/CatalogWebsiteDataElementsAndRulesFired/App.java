@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
@@ -17,16 +18,19 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 public class App {
 	private static final Logger LOGGER = Logger.getLogger(App.class
 			.getSimpleName());
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		// container for the resulting matrix
 		ArrayList<PageInfoContainer> pages = new ArrayList<PageInfoContainer>();
 		JSONArray pagesAsJSONArray = new JSONArray();
+		Set<String> dataElementNames = new HashSet<String>();
+		Set<String> ruleNames = new HashSet<String>();
 
 		// and go!
 		LOGGER.info("Reading list of URLs from file...");
@@ -44,7 +48,7 @@ public class App {
 			LOGGER.info("Done reading URLs, found " + siteURLs.size());
 
 			LOGGER.info("Opening browser...");
-			driver = new FirefoxDriver();
+			driver = new ChromeDriver();
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 
 			LOGGER.info("Crawling site now...");
@@ -76,12 +80,14 @@ public class App {
 						} else {
 							deValueString = "weird";
 						}
-						DataElement de = new DataElement(deName, deValueString);
+						DataElement de = new DataElement(deName, deValueString, true);
 						dataElements.add(de);
 						JSONObject deAsJSON = new JSONObject();
 						deAsJSON.put("name", deName);
 						deAsJSON.put("value", deValueString);
+						deAsJSON.put("active", true);
 						dataElementsAsJSON.add(deAsJSON);
+						dataElementNames.add(deName);
 					}
 				}
 
@@ -100,9 +106,13 @@ public class App {
 								.replace("\" fired.", "");
 						LOGGER.fine("Adding " + ruleName
 								+ " to list of fired rules...");
-						Rule rule = new Rule(RuleType.PLR, ruleName, true);
+						Rule rule = new Rule(RuleType.PLR, ruleName, true, true);
 						rulesFired.add(rule);
-						rulesFiredAsJSON.add(ruleName);
+						JSONObject ruleAsJSON = new JSONObject();
+						ruleAsJSON.put("name", ruleName);
+						ruleAsJSON.put("active", true);
+						rulesFiredAsJSON.add(ruleAsJSON);
+						ruleNames.add(ruleName);
 					}
 				}
 				LOGGER.fine("Total rules fired: " + rulesFired.size());
@@ -142,6 +152,10 @@ public class App {
 			// save this as JSON
 			JSONObject resultJSON = new JSONObject();
 			resultJSON.put("pages", pagesAsJSONArray);
+			resultJSON.put("dataElements",
+					convertStringSetToJSONArray(dataElementNames));
+			resultJSON.put("pageLoadRules",
+					convertStringSetToJSONArray(ruleNames));
 			out = new BufferedWriter(new FileWriter("pageInfo.json"));
 			resultJSON.writeJSONString(out);
 			System.out.print("done.");
@@ -168,5 +182,17 @@ public class App {
 			}
 		}
 		LOGGER.info("done.");
+	}
+
+	private static Object convertStringSetToJSONArray(
+			Set<String> dataElementNames) {
+		JSONArray result = new JSONArray();
+		// loop over the Set
+		for (Iterator<String> iterator = dataElementNames.iterator(); iterator
+				.hasNext();) {
+			String de = iterator.next();
+			result.add(de);
+		}
+		return result;
 	}
 }

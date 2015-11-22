@@ -3,10 +3,16 @@ package com.exner.sel20.test.CatalogWebsiteDataElementsAndRulesFired;
 public class DataElement {
 	private final String name;
 	private final String value;
+	private final boolean active;
 	
-	public DataElement(String name, String value) {
+	public DataElement(String name, String value, boolean active) {
 		this.name = name;
 		this.value = value;
+		this.active = active;
+	}
+
+	public boolean isActive() {
+		return active;
 	}
 
 	public String getName() {
