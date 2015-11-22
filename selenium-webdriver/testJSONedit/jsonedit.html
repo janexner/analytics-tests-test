@@ -169,13 +169,13 @@ function loadFile() {
 				var cellX = document.createElement("td");
 				cellX.id = "plr-active-" + plr;
 				cellX.bgColor = colourBody[i %2][(j + offset) % 2];
-				cellX.innerHTML = "<input type='checkbox' checked id='plr-active-" + i + "-" + j + "' class='plr-active-box plr-" + j + "'>";
+				cellX.innerHTML = "<input type='checkbox' id='plr-active-" + i + "-" + j + "' class='plr-active-box plr-" + j + "'>";
 				tableRow.appendChild(cellX);
 			}
 			// switch off those that are not active
 			for(var j = 0, max2 = thisPageInfo.pageLoadRules.length; j < max2; j++) {
 				var plr = thisPageInfo.pageLoadRules[j];
-				if (typeof plr.active !== 'undefined' && plr.active === false) {
+				if (typeof plr.active !== 'undefined' && plr.active === true) {
 					var plrid = plrNameIDMap[plr.name];
 					$("#plr-active-" + i + "-" + plrid).click();
 				}
@@ -242,8 +242,16 @@ function loadFile() {
 			var pid = id.replace(/plr-active-/,"").replace(/-.*$/,"");
 			var did = id.replace(/plr-active-[^-]+-/,"");
 			console.log(id + " > " + state);
-			var plrid = plrIDNameMap[did];
-			pagesData.pages[pid].pageLoadRules[plrid].active = state;				
+			var plrid = findLocalIDOfPLROnPage(did, pid);
+			if (-1 == plrid) {
+				// this page doesn't even have it so far
+				var newPLR = {};
+				newPLR.name = pagesData.pageLoadRules[did];
+				newPLR.active = state;
+				pagesData.pages[pid].pageLoadRules.push(newPLR);
+			} else {
+				pagesData.pages[pid].pageLoadRules[plrid].active = state;				
+			}
 		});
 		// scripts for management
 		$("#showJSON").on("click", function() {
@@ -261,6 +269,17 @@ function loadFile() {
 			$("#dataDisplay").show();
 		});
     }
+}
+function findLocalIDOfPLROnPage(plrID, pageID) {
+	var plrList = pagesData.pageLoadRules;
+	var plrName = plrList[plrID];
+	var plrListForPage = pagesData.pages[pageID].pageLoadRules;
+	for (var i = plrListForPage.length - 1; i >= 0; i--) {
+		if (plrName == plrListForPage[i].name) {
+			return i;
+		}
+	};
+	return -1;
 }
 	</script>
 </body>
