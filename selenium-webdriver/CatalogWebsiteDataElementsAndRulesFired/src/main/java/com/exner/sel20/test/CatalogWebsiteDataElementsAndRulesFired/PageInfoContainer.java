@@ -1,15 +1,15 @@
 package com.exner.sel20.test.CatalogWebsiteDataElementsAndRulesFired;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class PageInfoContainer {
 	private final String pageURL;
 	private final String name;
-	private final ArrayList<DataElement> dataElements;
-	private final ArrayList<Rule> rules;
+	private final List<DataElement> dataElements;
+	private final List<Rule> rules;
 
 	public PageInfoContainer(String name, String url,
-			ArrayList<DataElement> dataElements, ArrayList<Rule> rules) {
+			List<DataElement> dataElements, List<Rule> rules) {
 		this.name = name;
 		this.pageURL = url;
 		this.dataElements = dataElements;
@@ -24,11 +24,11 @@ public class PageInfoContainer {
 		return pageURL;
 	}
 
-	public ArrayList<DataElement> getDataElements() {
+	public List<DataElement> getDataElements() {
 		return dataElements;
 	}
 
-	public ArrayList<Rule> getRules() {
+	public List<Rule> getRules() {
 		return rules;
 	}
 }
