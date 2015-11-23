@@ -22,7 +22,7 @@ The JSON output will be in a file called "pageInfo.json".
 
 #testJSONEdit
 
-A single-page HTML tool for changing the JSON file created by CatalogWebsiteDataElementsAndRulesFired
+A single-page HTML tool for changing the JSON file created by CatalogWebsiteDataElementsAndRulesFired.
 
 You can enable and disable the "active" flag on Data Elements and Page Load Rules per page.
 
