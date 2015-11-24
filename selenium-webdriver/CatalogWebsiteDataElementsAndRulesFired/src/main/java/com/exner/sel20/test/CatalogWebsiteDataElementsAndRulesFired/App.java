@@ -133,7 +133,7 @@ public class App {
 				PageInfoContainer pageInfo = iterator.next();
 				System.out.println("Page: " + pageInfo.getName());
 				System.out.println("      " + pageInfo.getPageURL());
-				ArrayList<DataElement> des = pageInfo.getDataElements();
+				ArrayList<DataElement> des = (ArrayList<DataElement>) pageInfo.getDataElements();
 				System.out.println("    Data Elements: " + des.size());
 				for (Iterator<DataElement> iterator2 = des.iterator(); iterator2
 						.hasNext();) {
@@ -141,7 +141,7 @@ public class App {
 					System.out.println("        " + dataElement.getName()
 							+ " => " + dataElement.getValue());
 				}
-				ArrayList<Rule> rules = pageInfo.getRules();
+				ArrayList<Rule> rules = (ArrayList<Rule>) pageInfo.getRules();
 				System.out.println("    Rules that fired: " + rules.size());
 				for (Iterator<Rule> iterator2 = rules.iterator(); iterator2
 						.hasNext();) {
