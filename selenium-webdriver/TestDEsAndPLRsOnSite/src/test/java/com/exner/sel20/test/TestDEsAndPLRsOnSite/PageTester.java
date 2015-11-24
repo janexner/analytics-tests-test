@@ -10,14 +10,15 @@ import java.util.Set;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 public class PageTester {
 	private final PageTestDefinition pageTestDefinition;
 	private final WebDriver driver;
 	private final JavascriptExecutor js;
 
-	public PageTester(WebDriver driver, PageTestDefinition pageTestDefinition) {
-		this.driver = driver;
+	public PageTester(PageTestDefinition pageTestDefinition) {
+		this.driver = new PhantomJSDriver();
 		this.pageTestDefinition = pageTestDefinition;
 		js = (JavascriptExecutor) driver;
 	}
@@ -90,6 +91,9 @@ public class PageTester {
 		}
 		assertTrue("Found all PLRs that should have fired",
 				numberOfRulesFired >= ruleMatches);
+		
+		// close browser
+		this.driver.close();
 	}
 
 	private Object getValueOfDataElement(String dataElementName) {

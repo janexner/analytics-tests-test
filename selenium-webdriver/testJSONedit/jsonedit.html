@@ -16,13 +16,14 @@
 		<table id="dataTable" style="table-layout: fixed; width: 600em; overflow: scroll">
 			<thead>
 				<tr id="dataTableHeaderTopRow">
-					<th><input id="showJSON" type="button" value="show JSON"></th>
+					<th colspan="2"><input id="showJSON" type="button" value="show JSON"></th>
 				</tr>
 				<tr id="dataTableHeaderMiddleRow">
-					<th></th>
+					<th colspan="2"></th>
 				</tr>
 				<tr id="dataTableHeaderBottomRow">
 					<th>Page / URL</th>
+					<th class="pageActive"></th>
 				</tr>
 			</thead>
 			<tbody id="dataTableBody">
@@ -140,6 +141,15 @@ function loadFile() {
 			cellPage.innerHTML = "<a href='" + thisPageInfo.url + "'>" + thisPageInfo.name + "</a>";
 			cellPage.bgColor = colourBody[i % 2][1];
 			tableRow.appendChild(cellPage);
+			var cellPageOnOff = document.createElement("td");
+			var t = "<input type='checkbox'";
+			if (typeof thisPageInfo.active == 'undefined' || thisPageInfo.active) {
+				t += " checked";
+			}
+			t += " id='page-active-" + i + "' class='page-active-box page-" + i + "'>"
+			cellPageOnOff.innerHTML = t;
+			cellPageOnOff.bgColor = colourBody[i % 2][1];
+			tableRow.appendChild(cellPageOnOff);
 			for(var j = 0, max2 = thisPageInfo.dataElements.length; j < max2; j++) {
 				var de = thisPageInfo.dataElements[j];
 				var active = true;
@@ -183,6 +193,13 @@ function loadFile() {
 		};
 
 		// attach fancy scripts
+		$(".page-active-box").on("change", function() {
+			var id = $(this).attr("id");
+			var state = $("#" + id).prop("checked");
+			var pid = id.replace(/page-active-/,"").replace(/-.*$/,"");
+			console.log(id + " > " + state);
+			pagesData.pages[pid].active = state;				
+		});
 		for(var i = 0, max = dataElementList.length; i < max; i++) {
 			var id = "de_" + i + "_all_on";
 			$("#" + id).on("click", function() {

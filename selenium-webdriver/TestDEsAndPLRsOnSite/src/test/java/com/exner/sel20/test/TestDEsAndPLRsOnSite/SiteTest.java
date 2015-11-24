@@ -26,20 +26,6 @@ public class SiteTest {
 	private static final Logger LOGGER = Logger.getLogger(SiteTest.class
 			.getSimpleName());
 
-	private WebDriver driver;
-
-	@Before
-	public void openBrowser() {
-		driver = new PhantomJSDriver();
-		// screenshotHelper = new ScreenshotHelper();
-	}
-
-	@After
-	public void saveScreenshotAndCloseBrowser() throws IOException {
-		// screenshotHelper.saveScreenshot("screenshot.png");
-		driver.quit();
-	}
-
 	@Test
 	public void testSite() {
 		// load test description from JSON
@@ -54,37 +40,48 @@ public class SiteTest {
 			for (Iterator<JSONObject> iterator = pagesToTest.iterator(); iterator
 					.hasNext();) {
 				JSONObject page = iterator.next();
-				JSONArray des = (JSONArray) page.get("dataElements");
-				Set<DataElement> dataElementList = new HashSet<DataElement>();
-				for (Iterator<JSONObject> iterator2 = des.iterator(); iterator2
-						.hasNext();) {
-					JSONObject deJSON = iterator2.next();
-					String name = (String) deJSON.get("name");
-					String value = (String) deJSON.get("value");
-					boolean active = (Boolean) deJSON.get("active");
-					DataElement de = new DataElement(name, value, active);
-					dataElementList.add(de);
+				boolean pageActive = true;
+				Object activeTest = page.get("active");
+				if (null != activeTest) {
+					pageActive = (Boolean) activeTest;
 				}
-				JSONArray plrs = (JSONArray) page.get("pageLoadRules");
-				Set<Rule> pageLoadRuleList = new HashSet<Rule>();
-				for (Iterator<JSONObject> iterator2 = plrs.iterator(); iterator2
-						.hasNext();) {
-					JSONObject plrJSON = (JSONObject) iterator2.next();
-					String name = (String) plrJSON.get("name");
-					boolean active = (Boolean) plrJSON.get("active");
-					Rule plr = new Rule(RuleType.PLR, name, active);
-					pageLoadRuleList.add(plr);
+				boolean hasActiveFlag = page.containsKey("active");
+				if (pageActive || !hasActiveFlag) {
+					JSONArray des = (JSONArray) page.get("dataElements");
+					Set<DataElement> dataElementList = new HashSet<DataElement>();
+					for (Iterator<JSONObject> iterator2 = des.iterator(); iterator2
+							.hasNext();) {
+						JSONObject deJSON = iterator2.next();
+						String name = (String) deJSON.get("name");
+						String value = (String) deJSON.get("value");
+						boolean active = (Boolean) deJSON.get("active");
+						DataElement de = new DataElement(name, value, active);
+						dataElementList.add(de);
+					}
+					JSONArray plrs = (JSONArray) page.get("pageLoadRules");
+					Set<Rule> pageLoadRuleList = new HashSet<Rule>();
+					for (Iterator<JSONObject> iterator2 = plrs.iterator(); iterator2
+							.hasNext();) {
+						JSONObject plrJSON = (JSONObject) iterator2.next();
+						String name = (String) plrJSON.get("name");
+						boolean active = (Boolean) plrJSON.get("active");
+						Rule plr = new Rule(RuleType.PLR, name, active);
+						pageLoadRuleList.add(plr);
+					}
+					String pageTitle = (String) page.get("name");
+					String urlString = (String) page.get("url");
+					URL url = new URL(urlString);
+					PageTestDefinition ptd = new PageTestDefinition(url,
+							pageTitle, dataElementList, pageLoadRuleList);
+					// now test this page
+					LOGGER.info("Now testing page " + pageTitle);
+					PageTester tester = new PageTester(ptd);
+					tester.runTest();
+					LOGGER.info("done.");
+				} else {
+					LOGGER.info("Not testing page " + (String) page.get("name")
+							+ ".");
 				}
-				String pageTitle = (String) page.get("name");
-				String urlString = (String) page.get("url");
-				URL url = new URL(urlString);
-				PageTestDefinition ptd = new PageTestDefinition(url, pageTitle,
-						dataElementList, pageLoadRuleList);
-				// now test this page
-				LOGGER.info("Now testing page " + pageTitle);
-				PageTester tester = new PageTester(driver, ptd);
-				tester.runTest();
-				LOGGER.info("done.");
 			}
 		} catch (FileNotFoundException e) {
 			LOGGER.severe("Unable to open test description: "
