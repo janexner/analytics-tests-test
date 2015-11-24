@@ -20,7 +20,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 public class SiteTest {
 	private static final Logger LOGGER = Logger.getLogger(SiteTest.class
@@ -30,7 +30,7 @@ public class SiteTest {
 
 	@Before
 	public void openBrowser() {
-		driver = new ChromeDriver();
+		driver = new PhantomJSDriver();
 		// screenshotHelper = new ScreenshotHelper();
 	}
 
