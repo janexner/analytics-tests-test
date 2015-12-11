@@ -1,40 +1,75 @@
-<!DOCTYPE html>
-<html>
-<head>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>JSON pageInfo Editor</title>
-	<script src="jquery.js"></script>
+    <link rel="stylesheet" href="css/foundation.css" />
 </head>
 <body>
-	<form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
-		<fieldset>
-			<h2>Load a JSON File</h2>
-			<input type='file' id='fileinput'>
-			<input type='button' id='btnLoad' value='Load' onclick='loadFile();'>
-		</fieldset>
-	</form>
-	<div id="dataDisplay" style="display: none;">
-		<table id="dataTable" style="table-layout: fixed; width: 600em; overflow: scroll">
-			<thead>
-				<tr id="dataTableHeaderTopRow">
-					<th colspan="2"><input id="showJSON" type="button" value="show JSON"></th>
-				</tr>
-				<tr id="dataTableHeaderMiddleRow">
-					<th colspan="2"></th>
-				</tr>
-				<tr id="dataTableHeaderBottomRow">
-					<th>Page / URL</th>
-					<th class="pageActive"></th>
-				</tr>
-			</thead>
-			<tbody id="dataTableBody">
-			</tbody>
-		</table>
+	<div class="row small-12 columns">
+		<h1>Site Test Configurator</h1>
 	</div>
-	<div id="jsonDisplay" style="display: none;">
-		<input id="showData" type="button" value="show Data">
-		Copy JSON from here: <input id="copyJSON" type="text" value="">
-		<pre id="preJSON"></pre>
+	<div class="row small-12 columns">
+		<ul class="tabs" data-tabs id="display-tabs">
+			<li class="tabs-title is-active"><a href="#panel1" aria-selected="true">Step 1 - Load JSON</a></li>
+			<li class="tabs-title"><a href="#panel2">Step 2 - Select Pages to Test</a></li>
+			<li class="tabs-title"><a href="#panel3">Step 3 - Configure Tests</a></li>
+			<li class="tabs-title"><a href="#panel4">Step 4 - Resulting JSON</a></li>
+		</ul>
+		<div class="tabs-content" data-tabs-content="example-tabs">
+			<div class="tabs-panel is-active" id="panel1">
+				<form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
+					<fieldset class="fieldset">
+						<legend>Load a JSON File</legend>
+						<input type='file' id='fileinput'>
+						<input type='button' class="button" id='btnLoad' value='Load' onclick='loadFile();'>
+					</fieldset>
+				</form>
+			</div>
+			<div class="tabs-panel" id="panel2">
+				<table>
+					<thead>
+						<tr>
+							<th>Page</th>
+							<th>Test</th>
+							<th>Notes</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- filled by script -->
+					</tbody>
+				</table>
+			</div>
+			<div class="tabs-panel" id="panel3">
+				<h3>Data Elements</h3>
+				<ul id="deAcc" class="accordion" data-accordion data-multi-expand="false">
+				</ul>
+				<h3>Page Load Rules</h3>
+				<ul id="plrAcc" class="accordion" data-accordion role="tablist">
+				</ul>
+			</div>
+			<div class="tabs-panel" id="panel4">
+				<div class="row">
+					<div class="small-12 columns">
+						<label>
+							Copy JSON from here: <input id="copyJSON" type="text" value="">
+						</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="small-12 columns">
+						<pre id="preJSON"></pre>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
+    <script src="js/jquery.js"></script>
+    <script src="js/foundation.js"></script>
+    <script>
+		$(document).foundation();
+    </script>
 	<script type="text/javascript">
 var colourHead = ["#F0F0F0", "#F9F9F9"];
 var colourBody = [["#FFF6F6", "#FFFAFA"], ["#F9FFF9", "#FEFFFE"]];
@@ -71,232 +106,187 @@ function loadFile() {
 		lines = e.target.result;
 		pagesData = JSON.parse(lines);
 		console.log(pagesData);
-		var form = document.getElementById("jsonFile");
-		form.style.display = "none";
-		var dataDisplay = document.getElementById("dataDisplay");
-		dataDisplay.style.display = "block";
-		// make the table header
-		var dataTableHeaderTopRow = document.getElementById("dataTableHeaderTopRow");
-		var dataTableHeaderMiddleRow = document.getElementById("dataTableHeaderMiddleRow");
-		var dataTableHeaderBottomRow = document.getElementById("dataTableHeaderBottomRow");
-		// table header - data elements
-		var dataElementList = pagesData.dataElements;
-		var howManyDEs = dataElementList.length;
-		var deHeader = document.createElement("th");
-		deHeader.colSpan = (howManyDEs * 2);
-		deHeader.innerHTML = "Data Elements";
-		dataTableHeaderTopRow.appendChild(deHeader);
-		for (var i = 0, max = dataElementList.length; i < max; i++) {
-			var dedeh = document.createElement("th");
-			dedeh.colSpan = 2;
-			//dedeh.style.width = "200px";
-			dedeh.innerHTML = dataElementList[i];
-			dedeh.bgColor = colourHead[i % 2];
-			dataTableHeaderMiddleRow.appendChild(dedeh);
-			var dedexh = document.createElement("th");
-			dedexh.innerHTML = "<input type='button' value='All on' id='de_" + i + "_all_on'> | <input type='button' value='All off' id='de_" + i + "_all_off'>";
-			dedexh.dataset.itemclass = "de-" + i;
-			dedexh.title = "Test Data Element on all pages or not?";
-			dedexh.bgColor = colourHead[i % 2];
-			dataTableHeaderBottomRow.appendChild(dedexh);
-			var dedenh = document.createElement("th");
-			dedenh.innerHTML = "Value";
-			dedenh.bgColor = colourHead[i % 2];
-			dataTableHeaderBottomRow.appendChild(dedenh);
-		};
-
-		var offset = dataElementList.length % 2;
-		// table header - page load rules
-		var plrList = pagesData.pageLoadRules;
-		var howManyPLRs = plrList.length;
-		var plrHeader = document.createElement("th");
-		plrHeader.colSpan = howManyPLRs;
-		plrHeader.innerHTML = "Page Load Rules";
-		dataTableHeaderTopRow.appendChild(plrHeader);
-		for (var i = 0, max = plrList.length; i < max; i++) {
-			var plrName = plrList[i];
-			plrNameIDMap[plrName] = i;
-			var plrplrh = document.createElement("th");
-			plrplrh.innerHTML = plrName;
-			plrplrh.bgColor = colourHead[(i + offset) % 2];
-			dataTableHeaderMiddleRow.appendChild(plrplrh);
-			var plrplrf = document.createElement("th");
-			plrplrf.innerHTML = "<input type='button' value='All on' id='plr_" + i + "_all_on'> | <input type='button' value='All off' id='plr_" + i + "_all_off'>";
-			plrplrf.dataset.itemclass = "plr-" + i;
-			plrplrf.title = "Test PLR on all pages or not?";
-			plrplrf.bgColor = colourHead[(i + offset) % 2];
-			dataTableHeaderBottomRow.appendChild(plrplrf);
-		};
-
-		// make the table body
-		var dataTableBody = document.getElementById("dataTableBody");
-		var pageInfo = pagesData.pages;
-		for (var i = 0, max = pageInfo.length; i < max; i++) {
-			var thisPageInfo = pageInfo[i];
-			var tableRow = document.createElement("tr");
-			tableRow.bgColor = colourBody[i % 2][0];
-			tableRow.id = "page-" + i;
-			dataTableBody.appendChild(tableRow);
-			var cellPage = document.createElement("td");
-			cellPage.innerHTML = "<a href='" + thisPageInfo.url + "'>" + thisPageInfo.name + "</a>";
-			cellPage.bgColor = colourBody[i % 2][1];
-			tableRow.appendChild(cellPage);
-			var cellPageOnOff = document.createElement("td");
-			var t = "<input type='checkbox'";
-			if (typeof thisPageInfo.active == 'undefined' || thisPageInfo.active) {
-				t += " checked";
-			}
-			t += " id='page-active-" + i + "' class='page-active-box page-" + i + "'>"
-			cellPageOnOff.innerHTML = t;
-			cellPageOnOff.bgColor = colourBody[i % 2][1];
-			tableRow.appendChild(cellPageOnOff);
-			for(var j = 0, max2 = thisPageInfo.dataElements.length; j < max2; j++) {
-				var de = thisPageInfo.dataElements[j];
-				var active = true;
-				if (typeof de.active === 'undefined') {
-					de.active = true;
-				} else {
-					active = de.active;
-				}
-				var cellX = document.createElement("td");
-				cellX.id = "de-active-" + de.name;
-				cellX.bgColor = colourBody[i % 2][j % 2];
-				var t = "<input type='checkbox'";
-				if (active) {
-					t += " checked";
-				}
-				t += " id='de-active-" + i + "-" + j + "' class='de-active-box de-" + j + "'>";
-				cellX.innerHTML = t;
-				tableRow.appendChild(cellX);
-				var cellVal = document.createElement("td");
-				cellVal.id = "de-value-" + i + "-" + j;
-				cellVal.bgColor = colourBody[i % 2][j % 2];
-				cellVal.innerHTML = de.value;
-				tableRow.appendChild(cellVal);
-			}
-			for(var j = 0, max2 = plrList.length; j < max2; j++) {
-				var plr = plrList[j];
-				var cellX = document.createElement("td");
-				cellX.id = "plr-active-" + plr;
-				cellX.bgColor = colourBody[i %2][(j + offset) % 2];
-				cellX.innerHTML = "<input type='checkbox' id='plr-active-" + i + "-" + j + "' class='plr-active-box plr-" + j + "'>";
-				tableRow.appendChild(cellX);
-			}
-			// switch off those that are not active
-			for(var j = 0, max2 = thisPageInfo.pageLoadRules.length; j < max2; j++) {
-				var plr = thisPageInfo.pageLoadRules[j];
-				if (typeof plr.active !== 'undefined' && plr.active === true) {
-					var plrid = plrNameIDMap[plr.name];
-					$("#plr-active-" + i + "-" + plrid).click();
-				}
-			}
-		};
-
-		// attach fancy scripts
-		$(".page-active-box").on("change", function() {
-			var id = $(this).attr("id");
-			var state = $("#" + id).prop("checked");
-			var pid = id.replace(/page-active-/,"").replace(/-.*$/,"");
-			console.log(id + " > " + state);
-			pagesData.pages[pid].active = state;				
-		});
-		for(var i = 0, max = dataElementList.length; i < max; i++) {
-			var id = "de_" + i + "_all_on";
-			$("#" + id).on("click", function() {
-				var cl = "." + $(this).parent().data("itemclass");
-				$(cl).each(function() {
-					var box = $(this)[0];
-					if (false === box.checked) {
-						box.click();
-					}
-				});
-			});
-			var id = "de_" + i + "_all_off";
-			$("#" + id).on("click", function() {
-				var cl = "." + $(this).parent().data("itemclass");
-				$(cl).each(function() {
-					var box = $(this)[0];
-					if (true === box.checked) {
-						box.click();
-					}
-				});
-			});
-		}
-		$(".de-active-box").on("change", function() {
-			var id = $(this).attr("id");
-			var state = $("#" + id).prop("checked");
-			var pid = id.replace(/de-active-/,"").replace(/-.*$/,"");
-			var did = id.replace(/de-active-[^-]+-/,"");
-			console.log(id + " > " + state);
-			pagesData.pages[pid].dataElements[did].active = state;				
-		});
-		// scripts for PLRs
-		for(var i = 0, max = plrList.length; i < max; i++) {
-			var id = "plr_" + i + "_all_on";
-			$("#" + id).on("click", function() {
-				var cl = "." + $(this).parent().data("itemclass");
-				$(cl).each(function() {
-					var box = $(this)[0];
-					if (false === box.checked) {
-						box.click();
-					}
-				});
-			});
-			var id = "plr_" + i + "_all_off";
-			$("#" + id).on("click", function() {
-				var cl = "." + $(this).parent().data("itemclass");
-				$(cl).each(function() {
-					var box = $(this)[0];
-					if (true === box.checked) {
-						box.click();
-					}
-				});
-			});
-		}
-		$(".plr-active-box").on("change", function() {
-			var id = $(this).attr("id");
-			var state = $("#" + id).prop("checked");
-			var pid = id.replace(/plr-active-/,"").replace(/-.*$/,"");
-			var did = id.replace(/plr-active-[^-]+-/,"");
-			console.log(id + " > " + state);
-			var plrid = findLocalIDOfPLROnPage(did, pid);
-			if (-1 == plrid) {
-				// this page doesn't even have it so far
-				var newPLR = {};
-				newPLR.name = pagesData.pageLoadRules[did];
-				newPLR.active = state;
-				pagesData.pages[pid].pageLoadRules.push(newPLR);
-			} else {
-				pagesData.pages[pid].pageLoadRules[plrid].active = state;				
-			}
-		});
-		// scripts for management
-		$("#showJSON").on("click", function() {
-			$("#dataDisplay").hide();
-			$("#jsonDisplay").show();
-			var pre = document.getElementById("preJSON");
-			pre.innerHTML = JSON.stringify(pagesData, undefined, 2);
-			$("#copyJSON").val(JSON.stringify(pagesData));
-			$("#copyJSON").on("click", function() {
-				$(this).select();
-			});
-		});
-		$("#showData").on("click", function() {
-			$("#jsonDisplay").hide();
-			$("#dataDisplay").show();
-		});
+		// switch to second panel
+		$("#panel2-label").click();
     }
 }
-function findLocalIDOfPLROnPage(plrID, pageID) {
-	var plrList = pagesData.pageLoadRules;
-	var plrName = plrList[plrID];
-	var plrListForPage = pagesData.pages[pageID].pageLoadRules;
-	for (var i = plrListForPage.length - 1; i >= 0; i--) {
-		if (plrName == plrListForPage[i].name) {
-			return i;
+
+// tab management
+$("#display-tabs").on("change.zf.tabs", function(event,tab) { 
+	var tabName = tab.context.textContent;
+	if ("Step 1 - Load JSON" == tabName) {
+		// tab 1
+		// nothing to do
+	} else if ("Step 2 - Select Pages to Test" == tabName) {
+		// tab 2
+		initTab2();
+	} else if ("Step 3 - Configure Tests" == tabName) {
+		// tab 3
+		initTab3();
+	} else if ("Step 4 - Resulting JSON" == tabName) {
+		// tab 4
+		initTab4();
+	}
+});
+
+function initTab2() {
+	// build the table
+	var tbody = $("#panel2 table tbody")[0];
+	for(var i = 0, max = pagesData.pages.length; i < max; i++) {
+		var testPage = pagesData.pages[i];
+		var tableRow = document.createElement("tr");
+		tableRow.id = "tr_" + testPage.name;
+		tbody.appendChild(tableRow);
+		var td1 = document.createElement("td");
+		td1.class = "name";
+		td1.innerHTML = "<a href='" + testPage.url + "'>" + testPage.name + "</a>";
+		tableRow.appendChild(td1);
+		var td2 = document.createElement("td");
+		td2.class = "check";
+		var cb2 = document.createElement("input");
+		cb2.type = "checkbox";
+		var toBeChecked = false;
+		if (testPage.active) {
+			toBeChecked = true;
+		} else if (typeof testPage.active == 'undefined') {
+			// no explicit setting
+			if (testPage.pageLoadRules.length > 0 && testPage.dataElements.length > 0) {
+				toBeChecked = true;
+			} else {
+				// explicitly deactivate
+				testPage.active = false;
+			}
 		}
+		cb2.checked = toBeChecked;
+		td2.appendChild(cb2);
+		tableRow.appendChild(td2);
+		var td3 = document.createElement("td");
+		td3.class = "notes";
+		var note = "";
+		var sep = "";
+		if (testPage.pageLoadRules.length > 0) {
+			note += "" + testPage.pageLoadRules.length + " PLRs";
+			sep = ", ";
+		}
+		if (testPage.dataElements.length > 0) {
+			note += sep + testPage.dataElements.length + " DEs";
+		}
+		td3.innerHTML = note;
+		tableRow.appendChild(td3);
 	};
-	return -1;
+}
+function initTab3() {
+	// des
+	for (var i = 0, max = pagesData.dataElements.length; i < max; i++) {
+		var de = pagesData.dataElements[i];
+		var idStem = "panel" + i + "DE";
+		var li = document.createElement("li");
+		li.setAttribute("class", "accordion-item");
+		$("#deAcc")[0].appendChild(li);
+		var a = document.createElement("a");
+		a.href = "#" + idStem;
+		a.setAttribute("role", "tab");
+		a.setAttribute("class", "accordion-title");
+		a.id = idStem + "-heading";
+		a.setAttribute("aria-controls", idStem);
+		a.innerHTML = de;
+		li.appendChild(a);
+		var div = document.createElement("div");
+		div.id = idStem;
+		div.setAttribute("class", "accordion-content");
+		div.setAttribute("role", "tabpanel");
+		div.dataset.tabContent = "";
+		div.setAttribute("aria-labelledby", idStem + "-heading");
+		li.appendChild(div);
+		var container = document.createElement("div");
+		div.appendChild(container);
+		container.appendChild(createButtonGroup(de));
+		var showpages = document.createElement("button");
+		showpages.type = "button";
+		showpages.setAttribute("class", "button expand-pages-button");
+		showpages.innerHTML = "Show pages";
+		showpages.id = "sp_" + de.replace(/[ \/]/g, "");
+		container.appendChild(showpages);
+		var hidepages = document.createElement("button");
+		hidepages.type = "button";
+		hidepages.setAttribute("class", "button collapse-pages-button");
+		hidepages.innerHTML = "Hide pages";
+		hidepages.id = "hp_" + de.replace(/[ \/]/g, "");
+		container.appendChild(hidepages);
+		container.appendChild(createPagesTable(de, i));
+		var brk = document.createElement("div");
+		brk.style.clear = "both";
+		div.appendChild(brk);
+		$(document).foundation();
+	};
+	// expand or collapse table within Data Element that shows individual pages switches/values
+	$(".expand-pages-button").on("click", function() {
+		var id = this.id.replace(/sp_/, "pagesTable_");
+		$("#" + id).show();
+	});
+	$(".collapse-pages-button").on("click", function() {
+		var id = this.id.replace(/hp_/, "pagesTable_");
+		$("#" + id).hide();
+	});
+}
+function createButtonGroup(de) {
+	var buttonGroup = document.createElement("div");
+	buttonGroup.setAttribute("class", "button-group");
+	var inpallpages = document.createElement("button");
+	inpallpages.type = "button";
+	inpallpages.setAttribute("class", "button");
+	inpallpages.innerHTML = "Test DE on all pages";
+	buttonGroup.appendChild(inpallpages);
+	var inpnopages = document.createElement("button");
+	inpnopages.type = "button";
+	inpnopages.setAttribute("class", "button");
+	inpnopages.innerHTML = "Never test DE";
+	buttonGroup.appendChild(inpnopages);
+	return buttonGroup;
+}
+function createPagesTable(de, index) {
+	var pt = document.createElement("table");
+	pt.id = "pagesTable_" + de.replace(/[ \/]/g, "");
+	pt.style.display = "none";
+	var phead = document.createElement("thead");
+	pt.appendChild(phead);
+	var headrow = document.createElement("tr");
+	headrow.innerHTML = "<th>Page</th><th>Test</th><th>DE value</th>";
+	phead.appendChild(headrow);
+	var pbody = document.createElement("tbody");
+	pt.appendChild(pbody);
+	for (var i = 0, max = pagesData.pages.length; i < max; i++) {
+		var pageData = pagesData.pages[i];
+		var trow = document.createElement("tr");
+		pbody.appendChild(trow);
+		var td1 = document.createElement("td");
+		td1.innerHTML = "<a href='" + pageData.url + "'>" + pageData.name + "</a>";
+		trow.appendChild(td1);
+		var dataElement = {
+			"name": "none",
+			"active": false,
+			"value": "unknown"
+		};
+		for (var j = pageData.dataElements.length - 1; j >= 0; j--) {
+			if (pageData.dataElements[j].name == de) {
+				dataElement = pageData.dataElements[j];
+			}
+		};
+		var td2 = document.createElement("td");
+		td2.innerHTML = '<div class="switch tiny"><input class="switch-input" id="toggle_de' + index + "_plr" + i + '" type="checkbox" ' + (dataElement.active ? 'checked ' : '') + 'name="testOnOffSwitch"><label class="switch-paddle" for="tinySwitch"><span class="show-for-sr">Testing of this DE on or off</span></div>';
+		trow.appendChild(td2);
+		var td3 = document.createElement("td");
+		td3.innerHTML = "<input type='text' id='value_de" + index + "_plr" + i + "' value='" + dataElement.value + "'>";
+		trow.appendChild(td3);
+	};
+	return pt;
+}
+function initTab4() {
+	$("#preJSON").text(JSON.stringify(pagesData, undefined, 2));
+	$("#copyJSON").val(JSON.stringify(pagesData));
+	$("#copyJSON").on("click", function() {
+		$(this).select();
+	});
 }
 	</script>
 </body>
