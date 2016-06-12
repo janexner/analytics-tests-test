@@ -1,0 +1,100 @@
+{
+  "name": "Conrad Shop",
+  "pagesToTest": [
+    {
+      "pageURL": "https://www.conrad.de/",
+
+      "dataLayerElementDelayedExists" : [
+        { "name": "digitalData.page.pageInfo.geoRegion", "delay": 1000 },
+        { "name":"digitalData.page.pageInfo.language", "delay": 1000 },
+      ],
+      "dataLayerElementDelayedValue": [
+        {
+          "name": "digitalData.page.pageInfo.pageName",
+          "value": "Homepage",
+          "delay": 1000
+        },
+        {
+        	"name": "digitalData.page.category.pageType",
+        	"value": "Homepage",
+          "delay": 1000
+        },
+        {
+        	"name": "digitalData.page.pageInfo.currency",
+        	"value": "EUR",
+          "delay": 1000
+        }
+      ],
+
+      "jQueryLoaded": true,
+      "jQueryMinVersion": "1",
+      "jQueryVersionBelow": "3",
+
+      "adobe.DTMLoaded": true,
+      "adobe.DTMIsInDebugMode": true,
+      "adobe.DTMRuleHasRun": [ "Analytics General Tracking", "Google Analytics" ],
+
+      "adobe.VisitorIDServiceLoaded": true,
+      "adobe.VisitorIDServiceMinVersion": "1.5.2",
+
+      "adobe.AnalyticsCodeLoaded": true,
+      "adobe.AnalyticsCodeType": "AppMeasurement",
+      "adobe.AnalyticsCodeMinVersion": "1.6.1",
+       
+      "adobe.AnalyticsTagForReportSuiteFired": "advconraddeprod",
+    },
+    {
+      "pageURL": "https://www.conrad.de/de/monitoring-product-777000-latest-step-update-2015-01-07-135414-777000.html",
+
+      "jQueryLoaded": true,
+      "jQueryMinVersion": "1",
+      "jQueryVersionBelow": "3",
+
+      "dataLayerElementDelayedExists" : [
+        { "name": "digitalData.page.pageInfo.geoRegion", "delay": 1000 },
+        { "name": "digitalData.page.pageInfo.language", "delay": 1000 },
+      ],
+
+      "adobe.DTMLoaded": true,
+      "adobe.DTMIsInDebugMode": true,
+      "adobe.DTMRuleHasRunAfterDelay": [
+      	{ "name": "Analytics PDP Trigger", "delay": 2000 },
+       	{ "name": "Google Analytics", "delay": 1000 }, 
+      ],
+
+      "adobe.VisitorIDServiceLoaded": true,
+      "adobe.VisitorIDServiceMinVersion": "1.5.2",
+
+      "adobe.AnalyticsCodeLoaded": true,
+      "adobe.AnalyticsCodeType": "AppMeasurement",
+      "adobe.AnalyticsCodeMinVersion": "1.6.1",
+    },
+    {
+      "pageURL": "https://www.conrad.de/de/Search.html?search=raspberry+pi",
+
+      "jQueryLoaded": true,
+      "jQueryMinVersion": "1",
+      "jQueryVersionBelow": "3",
+
+      "dataLayerElementDelayedExists" : [
+        { "name": "digitalData.page.pageInfo.geoRegion", "delay": 1000 },
+        { "name": "digitalData.page.pageInfo.language", "delay": 1000 },
+      ],
+      "dataLayerElementValue": [
+        { "name": "digitalData.page.category.pageType", "value": "Search Results" },
+        { "name": "digitalData.page.pageInfo.onSiteSearchTerm", "value": "raspberry+pi" },
+      ],
+
+      "adobe.DTMLoaded": true,
+      "adobe.DTMIsInDebugMode": true,
+      "adobe.DTMRuleHasRun": [
+        "Analytics Regular/Keyword Search trigger",
+        "Analytics Reco(eVar37)",
+      ],
+      "adobe.DTMRuleHasRunAfterDelay": [
+        { "name": "Analytics Regular/Keyword Search Page", "delay": 10000 },
+        { "name": "Google Analytics", "delay": 1000 },
+      ],
+    },
+  ]
+}

@@ -1,9 +1,0 @@
-{
-  "name": "jan-exner.de",
-  "pagesToTest": [
-    {
-		"pageURL": "http://www.jan-exner.de/",
-		"jQueryLoaded": true,
-	}
-	]
-}

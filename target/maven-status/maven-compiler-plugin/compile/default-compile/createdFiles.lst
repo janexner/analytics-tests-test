@@ -1,0 +1,7 @@
+com\exner\tools\analyticstdd\GenericTests4AnalyticsProject\Main.class
+com\exner\tools\analyticstdd\GenericTests4AnalyticsProject\WebDriverPool.class
+com\exner\tools\analyticstdd\GenericTests4AnalyticsProject\StringLongTuple.class
+com\exner\tools\analyticstdd\GenericTests4AnalyticsProject\PageTestDefinition.class
+com\exner\tools\analyticstdd\GenericTests4AnalyticsProject\BasePooledWebDriverFactory.class
+com\exner\tools\analyticstdd\GenericTests4AnalyticsProject\StringStringLongTuple.class
+com\exner\tools\analyticstdd\GenericTests4AnalyticsProject\CreateTestDescriptionJSONFile.class
